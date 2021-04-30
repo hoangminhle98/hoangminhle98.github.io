@@ -1,0 +1,83 @@
+body {
+    background-color: black;
+    margin: 0;
+    position: relative;
+}
+
+#container {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    position: fixed;
+}
+#matrix {
+    margin: 0;
+    position: fixed;
+}
+
+#board {
+    margin: -20px auto 0;
+    box-shadow:
+        inset 0 0 50px #fff,
+        inset -5px 0 80px #00B501,
+        inset 5px 0 80px #4EFF50,
+        inset -5px 0 300px #00B501,
+        inset 5px 0 300px #4EFF50,
+        0 0 10px #fff,
+        2px 0 50px #00B501,
+        -2px 0 50px #4EFF50;
+}
+.square {
+    background-color: black;
+    --size: 40px;
+    display: inline-block;
+    width: var(--size);
+    height: var(--size);
+    border-left: 1px solid #2EFF2A;
+    border-top: 1px solid #2EFF2A;
+}
+.square:hover {
+    background-color: rgba(0, 0, 0, 0.541);
+}
+#board .row:last-child div{
+    border-bottom: 1px solid #2EFF2A;
+}
+
+.row div:last-child {
+    border-right: 1px solid #2EFF2A;
+}
+
+.white {
+    background-color: #fff;
+}
+
+.human {
+    background-color: white;
+}
+
+.cpu {
+    background-color: darkgreen;
+}
+
+.human:hover {
+    background-color: lightgray;
+}
+
+.cpu:hover{
+    background-color: #00B510;
+}
+.thinking {
+    background-color: white;
+}
+
+
+
+/*.human {*/
+/*  margin: 15%;*/
+/*  width: 50px;*/
+/*  height: 50px;*/
+/*  border: 3px solid #e74c3c;*/
+/*  border-radius: 50%;*/
+/*  box-sizing: border-box;*/
+/*}*/
