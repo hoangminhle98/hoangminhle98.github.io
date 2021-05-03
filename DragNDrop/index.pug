@@ -1,0 +1,115 @@
+- var human1 = ["dancer", "ice-skate", "sunbathing", "skydiving", "meditation"];
+- var human2 = ["unicycle", "musician", "family", "flyboard" , "criminal"];
+- var animals = ["squirrel", "whale", "dolphin", "butterfly", "dinosaur" ];
+- var supernatural = ["mermaid", "wizard", "hat", "castle", "sword"];
+- var space = [ "spaceship", "martian", "radar","space-ship", "alien"];
+- var flower = [ "sunflower", "vesak", "lily", "ixora", "plant" ]
+- var plant = [ "cactus", "pineapple", "mushroom", "crystal-meth", "coronavirus"];
+- var attractions = ["statue-of-liberty", "ho-chi-minh-mausoleum", "petronas-twin-tower", "merlion" , "eiffel-tower"];
+- var transport = [ "van", "tank", "balloon", "taxi", "rocket"  ];
+- var weird = [ "moon", "fire", "skull", "eye", "rubber-duck" ];
+
+- var flaticons = [human1, human2, animals, supernatural, space, flower, plant, attractions, transport, weird];
+
+style
+  include style.css
+  include speech-bubble.css
+head
+  title Drag n Drop
+  script(src="../jquery.js")
+  script(src="../app.js" )
+  link( rel="shortcut icon" type="image/x-icon" href="favicon.ico")
+div(id="outerWrap")
+  .background(id="background")
+    img(id="image" src='619.jpg' alt='background')
+
+  .controls(id="ctrl")
+    .gameCtrl(id="up")
+      label.newMain(for="up")
+        .button-bubble
+        .button-part-a
+        .button-part-b
+        .button-part-c
+        .button-txt &#9650
+        .button-part-c
+        .button-part-b
+        .button-part-a
+    .gameCtrl(id="down")
+      label.newMain(for="down")
+        .button-bubble
+        .button-part-a
+        .button-part-b
+        .button-part-c
+        .button-txt &#9660
+        .button-part-c
+        .button-part-b
+        .button-part-a
+    .gameCtrl(id="undo")
+      label.newMain(for="undo")
+        .button-bubble
+        .button-part-a
+        .button-part-b
+        .button-part-c
+        .button-txt undo
+        .button-part-c
+        .button-part-b
+        .button-part-a
+    .gameCtrl(id="switch")
+      label.newMain(for="switch")
+        .button-bubble
+        .button-part-a
+        .button-part-b
+        .button-part-c
+        .button-txt switch
+        .button-part-c
+        .button-part-b
+        .button-part-a
+    .gameCtrl(id="next")
+      label.newMain(for="next")
+        .button-bubble
+        .button-part-a
+        .button-part-b
+        .button-part-c
+        .button-txt more
+        .button-part-c
+        .button-part-b
+        .button-part-a
+
+    .gameCtrl
+      input(type="checkbox" id="check")
+      label.newMain(for="check")
+        .button-bubble
+        .button-part-a
+        .button-part-b
+        .button-part-c
+        .button-txt add
+        .button-part-c
+        .button-part-b
+        .button-part-a
+      - for (var i = 0; i < flaticons.length; i++)
+        .newContainer(id="container" + i hidden=true)
+          - for (var j = 0; j < 5; j++)
+            .newPlate(id="obj-"+ i + "--" +j draggable="true" ondragstart="drag(event)")
+              svg.icon
+                use(xlink:href='#' + flaticons[i][j])
+    .speech
+      .speech-bubble
+      .bub-part-a
+      .bub-part-b
+      .bub-part-c
+      .speech-txt(id="message") Hello, my friend !
+      .bub-part-c
+      .bub-part-b
+      .bub-part-a
+      .speech-arrow
+        .arrow-w
+        .arrow-x
+        .arrow-y
+        .arrow-z
+
+  .board( id="board")
+    - for (var x = 13; x > 0; x--)
+      .boardRow
+        - for (var y = 30; y > 0; y--)
+          .boardCol(id=x + "-" + y ondrop="drop(event)" ondragover="allowDrop(event)")
+div(id="collection" hidden=true)

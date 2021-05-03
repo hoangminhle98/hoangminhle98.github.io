@@ -1,0 +1,157 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:700);
+body {
+  -moz-transform: scale(1.3);
+  zoom:111.6%;
+  margin: 0;
+  padding: 0;
+}
+.background {
+  position: absolute;
+  z-index: 0;
+  width: 100%;
+  height: 400px;
+}
+.board {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 355px;
+}
+
+.boardRow {
+  width: 100%;
+  height: 9%;
+  box-sizing: border-box;
+}
+
+.boardCol {
+  width: 3.33333%;
+  height: 100%;
+  float: right;
+  border-radius: 3px;
+  box-sizing: border-box;
+  border:5px;
+}
+/*.boardCol:hover {*/
+/*  background-color: #869FB2;*/
+/*}*/
+.speech {
+  cursor: pointer;
+  margin-left: 10px;
+  width: 280px;
+  position: relative;
+  display: inline;
+  float: right;
+  padding-right: 1em;
+}
+.controls {
+  position: absolute;
+  width: 100%;
+  height: 80px;
+}
+
+.gameCtrl {
+  padding-left: 0.5em;
+  position: relative;
+  display: inline;
+  float: left;
+  height: 100%;
+  width: 7%;
+}
+
+#check {
+  display: none;
+}
+
+.newContainer {
+  z-index: 10;
+}
+
+.newMain {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 50;
+  display: table;
+  text-align: center;
+  cursor: pointer;
+}
+
+.newPlate {
+  cursor: pointer;
+  width: 80px;
+  height: 80px;
+  opacity: 0;
+  background-color:  rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease-in;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+}
+.newPlate:hover {
+  background-color: rgba(0, 0, 0, 0.1);;
+}
+
+.newPlate:nth-of-type(1) {
+  transition-delay: 0.2s;
+}
+
+.newPlate:nth-of-type(2) {
+  transition-delay: 0.3s;
+}
+.newPlate:nth-of-type(3) {
+  transition-delay: 0.4s;
+}
+.newPlate:nth-of-type(4) {
+  transition-delay: 0.5s;
+}
+.newPlate:nth-of-type(5) {
+  transition-delay: 0.6s;
+}
+
+#check:checked ~ .newMain ~ .newContainer .newPlate {
+  opacity: 1;
+}
+#check:checked ~ .newMain ~ .newContainer .newPlate:nth-child(1) {
+  left: 100%;
+}
+#check:checked ~ .newMain ~ .newContainer .newPlate:nth-child(2) {
+  left: 200%;
+}
+#check:checked ~ .newMain ~ .newContainer .newPlate:nth-child(3) {
+  left: 300%;
+}
+#check:checked ~ .newMain ~ .newContainer .newPlate:nth-child(4) {
+  left: 400%;
+}
+#check:checked ~ .newMain ~ .newContainer .newPlate:nth-child(5) {
+  left: 500%;
+}
+
+
+#ctrl {
+  z-index: 2;
+  padding-top: 0.7em;
+  position: relative;
+}
+
+#outerWrap {
+  position: relative;
+  z-index: 0;
+}
+
+img {
+  width: 100%;
+  height: 140%;
+}
+i {
+  cursor: pointer;
+}
+svg.icon {
+  width: 83px;
+  height: 83px;
+  margin-bottom: 10px;
+}
