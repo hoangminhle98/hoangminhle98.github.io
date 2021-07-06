@@ -1,4 +1,5 @@
 # Drag n Drop
+![image](https://user-images.githubusercontent.com/54024391/124543793-1bcb7280-de50-11eb-9a5e-24fa1004178a.png)
 * Web-based game that allows user to decorate multiple settings with flat icon objects
 * Player can switch background setting, resize objects and undo their actions
 * Implemented with template engine Pug, JQuery 
