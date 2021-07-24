@@ -3,7 +3,7 @@
 ![image](https://user-images.githubusercontent.com/54024391/126465525-ac51da0d-8f03-42c8-bbf8-b929279ad01d.png)
 ![image](https://user-images.githubusercontent.com/54024391/124561760-71137e00-de68-11eb-8fb9-6457f632627c.png)
 
-* [Play here!](https://hoangminhle98.github.io/DragNDrop/html/) ( Not supported on Firefox and Internet Explorer)
+* [Play here!](https://hoangminhle98.github.io/DragNDrop/html/index.html)
 * Web-based game that allows user to decorate multiple settings with flat icon objects
 * Player can switch background setting, resize objects and undo their actions
 * Implemented with template engine Pug, JQuery 
