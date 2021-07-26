@@ -12,11 +12,6 @@ MatterTools.Demo.create({
     resetOnOrientation: true,
     examples: [
         {
-            name: 'Rain',
-            id: 'rain',
-            init: Example.rain
-        },
-        {
             name: 'Slingshot',
             id: 'slingshot',
             init: Example.slingshot
