@@ -11,16 +11,15 @@ Example.slingshot = function() {
         Mouse = Matter.Mouse,
         World = Matter.World,
         Bodies = Matter.Bodies;
-    // create engine
+        Body = Matter.Body;
+        Composite = Matter.Composite;
     var engine = Engine.create(),
         world = engine.world;
-
-    // create renderer
     var render = Render.create({
         element: document.body,
         engine: engine,
         options: {
-            width: 1000,
+            width: 1400,
             height: 600,
             wireframes: false
         }
@@ -31,10 +30,23 @@ Example.slingshot = function() {
     var runner = Runner.create();
     Runner.run(runner, engine);
 
-    var ground = Bodies.rectangle(395, 600, 1010, 50, { isStatic: true }),
-        rockOptions = { density: 0.004 },
-        rock = Bodies.polygon(170, 370, 8, 20, rockOptions),
-        anchor = { x: 170, y: 370 },
+    const rockX = 240,
+        rockY = 370,
+        rockCategory = 0x0002,
+        displacement = 30,
+        barCoords = [[680, 200], [800, 300], [950, 400], [500, 300], [10, 100], [0, 200]];
+
+    var rockOptions = { density: 0.004, collisionFilter: { category: rockCategory} },
+        diamondOptions = { density: 0.004, label: 'diamond'},
+        particleOptions = {density: 0.00001};
+
+    barCoords.forEach((item, index) => {
+        World.add(engine.world, [Bodies.rectangle(item[0], item[1], 30, 20, { isStatic: true, render : {fillStyle: 'white'} }),
+                                Bodies.rectangle(item[0], item[1]-20, 30, 30, diamondOptions)]);
+    });
+
+    var rock = Bodies.polygon(rockX, rockY, 8, 20, rockOptions),
+        anchor = { x: rockX, y: rockY },
         elastic = Constraint.create({
             pointA: anchor,
             bodyB: rock,
@@ -42,40 +54,50 @@ Example.slingshot = function() {
         });
     rock.label = 'rock';
 
-    var pyramid = Composites.pyramid(500, 380, 9, 10, 0, 0, function(x, y)
-    {return Bodies.rectangle(x, y, 30, 30, { density: 0.004})});
+    var pyramid = Composites.pyramid(460, 380, 5, 6, 0, 0, function(x, y)
+        {return Bodies.rectangle(x, y, 30, 30, { density: 0.004, render : {fillStyle: 'white'}})});
+    World.add(engine.world, Bodies.polygon(533, 380, 5, 20, diamondOptions));
 
-    var ground2 = Bodies.rectangle(680, 200, 30, 20, { isStatic: true });
+    // add bodies
+    var size = 80,
+        x = 700,
+        y = 500,
+        head = Bodies.circle(x, y- size, size/2, { render: {fillStyle: 'white'} }),
+        body = Bodies.circle(x, y,         size, { render: {fillStyle: 'white'} }),
+        leftEye     = Bodies.circle(x - 15, y - size - 5, 5, { render: {fillStyle: 'black'} }),
+        rightEye    = Bodies.circle(x + 15, y - size - 5, 5, { render: {fillStyle: 'black'} }),
+        bodyParts   = [head, body, leftEye, rightEye];
 
-    var diamondOptions = {
-            density: 0.004,
-            label: 'diamond',
-            render: {
-                strokeStyle: 'white',
-                fillStyle: 'white'
-            },
-        },
-        diamond = Bodies.rectangle(635,380, 30, 30, diamondOptions),
-        particleOptions = {
-            density: 0.00001,
-            render: {fillStyle: 'white'}
-        };
+    for (i = 0; i < 4; i += 1) {
+        bodyParts.push(Bodies.circle(x, y - 50 + 32 * i, 10));
+    }
 
-    var diamond2 = Bodies.polygon(680,180, 8, 20, diamondOptions);
+    var robot = Body.create({
+        parts: bodyParts
+    });
 
-    World.add(engine.world, [ground, ground2, diamond2, pyramid, rock, elastic, diamond]);
+    Composite.add(world, [
+        robot,
+        Bodies.rectangle(400, 600, 800, 50.5, { isStatic: true, render : {fillStyle : 'white'} })
+    ]);
 
-    var threshold = 30;
-    Events.on(engine, 'collisionStart', function(event) {
+    for (i = 0; i < 5; i += 1) {
+        World.add(engine.world, Bodies.rectangle(100, 450 + 30* i, 30, 30, diamondOptions));
+    };
+
+    World.add(engine.world, [pyramid, rock, elastic]);
+
+    var threshold = 20;
+    Events.on(engine, 'collisionEnd', function(event) {
         var pairs = event.pairs;
         for (var i = 0, j = pairs.length; i != j; ++i) {
             var pair = pairs[i];
             let bodyA = undefined,
                 bodyB = undefined;
-            if (pair.bodyB.label.startsWith("diamond"))   {
+            if (pair.bodyB.label.startsWith("diamond") || pair.bodyB === body)   {
                 bodyA = pair.bodyB;
                 bodyB = pair.bodyA;
-            } else if (pair.bodyA.label.startsWith("diamond")) {
+            } else if (pair.bodyA.label.startsWith("diamond") || pair.bodyA === body) {
                 bodyA = pair.bodyA;
                 bodyB = pair.bodyB;
             }
@@ -92,15 +114,18 @@ Example.slingshot = function() {
     });
 
     Events.on(engine, 'afterUpdate', function() {
-        if (mouseConstraint.mouse.button === -1 && (rock.position.x > 190 || rock.position.y < 350)) {
-            rock = Bodies.polygon(170, 370, 7, 20, rockOptions);
-            rock.label = 'rock';
-            World.add(engine.world, rock);
-            elastic.bodyB = rock;
+        if (mouseConstraint.mouse.button === -1) {
+            let dX = rock.position.x - rockX,
+                dY = rock.position.y - rockY;
+            if (Math.sqrt(dX*dX + dY*dY) > displacement) {
+                rock = Bodies.polygon(rockX, rockY, 7, 20, rockOptions);
+                World.add(engine.world, rock);
+                elastic.bodyB = rock;
+
+            }
         }
     });
 
-    // add mouse control
     var mouse = Mouse.create(render.canvas),
         mouseConstraint = MouseConstraint.create(engine, {
             mouse: mouse,
@@ -111,19 +136,15 @@ Example.slingshot = function() {
                 }
             }
         });
-
+    mouseConstraint.collisionFilter.mask = rockCategory;
     World.add(world, mouseConstraint);
 
-    // keep the mouse in sync with rendering
     render.mouse = mouse;
 
-    // fit the render viewport to the scene
     Render.lookAt(render, {
         min: { x: 0, y: 0 },
         max: { x: 1000, y: 600 }
     });
-
-    // context for MatterTools.Demo
     return {
         engine: engine,
         runner: runner,

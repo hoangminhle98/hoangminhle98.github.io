@@ -11,7 +11,6 @@ Example.rain = function() {
         Mouse = Matter.Mouse,
         World = Matter.World,
         Bodies = Matter.Bodies;
-    // create engine
     var engine = Engine.create(),
         world = engine.world;
 
@@ -73,10 +72,8 @@ Example.rain = function() {
 
     World.add(world, mouseConstraint);
 
-    // keep the mouse in sync with rendering
     render.mouse = mouse;
 
-    // fit the render viewport to the scene
     Render.lookAt(render, {
         min: { x: 0, y: 0 },
         max: { x: 800, y: 600 }
