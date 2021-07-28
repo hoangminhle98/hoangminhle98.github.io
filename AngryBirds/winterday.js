@@ -58,7 +58,7 @@ Example.winterday = function() {
         for (j = 0; j < 3; j += 1) {
             World.add(engine.world, Bodies.rectangle(520 + 30* j,90 + 30* i, 30, 30, diamondOptions));
         };
-    World.add(engine.world, Bodies.polygon(533, 10, 5, 20, diamondOptions));
+    World.add(engine.world, Bodies.polygon(537, 10, 6, 20, diamondOptions));
 
     // add bodies
     var size = 80,
