@@ -12,14 +12,14 @@ MatterTools.Demo.create({
     resetOnOrientation: true,
     examples: [
         {
-            name: 'Winter Day',
-            id: 'winterday',
-            init: Example.winterday
-        },
-        {
             name: 'Candy Land',
             id: 'candyland',
             init: Example.candyland
+        },
+        {
+            name: 'Winter Day',
+            id: 'winterday',
+            init: Example.winterday
         }
     ]
 });

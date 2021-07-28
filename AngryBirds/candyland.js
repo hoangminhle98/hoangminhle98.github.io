@@ -32,9 +32,10 @@ Example.candyland = function() {
 
     const rockX = 240,
         rockY = 370,
+        defaultCategory = 0x0001,
         rockCategory = 0x0002,
         displacement = 30;
-    var rockOptions = { density: 0.004, collisionFilter: { category: rockCategory} },
+    var rockOptions = { density: 1, restitution: 0.99, friction: 0.001, collisionFilter: { category: rockCategory} },
         rock = Bodies.polygon(rockX, rockY, 8, 20, rockOptions),
         anchor = { x: rockX, y: rockY },
         elastic = Constraint.create({
@@ -42,26 +43,33 @@ Example.candyland = function() {
             bodyB: rock,
             stiffness: 0.05
         })
-        diamondOptions = { density: 0.004, label: 'diamond', isStatic: true, render : rock.render},
-        particleOptions = {density: 0.00001};
+        diamondOptions = { density: 0.004, label: 'diamond'},
+        particleOptions = {density: 0.00001, friction: 0.00001, restitution : 0.9};
 
     rock.label = 'rock';
 
-
-    for (i = 0; i < 2; i += 1)
-        for (j = 0; j < 3; j += 1) {
-            World.add(engine.world, Bodies.rectangle(520 + 30* j,90 + 30* i, 30, 30, diamondOptions));
+    var size = 30, max = 17;
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * max);
+    }
+    for (i = 0; i < 30; i += 1)
+        for (j = 0; j < getRandomInt(max); j += 1) {
+            square = Bodies.rectangle((size + 2) * i - 50, (size + 2)* j + 70, size, size, diamondOptions);
+            World.add(engine.world, square);
+            square.isStatic = true;
         };
-    World.add(engine.world, Bodies.polygon(533, 10, 5, 20, diamondOptions));
 
-    for (i = 0; i < 4; i += 1)
-        for (j = 0; j < 3; j += 1) {
-            World.add(engine.world, Bodies.rectangle(520 + 30* j,390 + 30* i, 30, 30, diamondOptions));
+    max = 7;
+    for (i = 0; i < 30; i += 1)
+        for (j = 0; j < getRandomInt(max); j += 1) {
+            square = Bodies.rectangle( 100 + (size + 2) * i, 580 - (size + 2)* j, size, size, diamondOptions);
+            World.add(engine.world, square);
+            square.isStatic = true;
         };
 
     World.add(engine.world, [rock, elastic]);
 
-    var threshold = 20;
+    var threshold = 900;
     Events.on(engine, 'collisionEnd', function(event) {
         var pairs = event.pairs;
         for (var i = 0, j = pairs.length; i != j; ++i) {
@@ -80,9 +88,8 @@ Example.candyland = function() {
                 if (Math.sqrt(velocity.x*velocity.x + velocity.y*velocity.y) * bodyB.mass > threshold) {
                     pos = bodyA.position;
                     Composite.remove(world, bodyA);
-
-                    World.add(engine.world, Composites.stack(pos.x, pos.y, 6, 6, 0, 0, function(x, y)
-                    {return Bodies.circle(x,y, 3, particleOptions)}));
+                    World.add(engine.world, Composites.stack(pos.x, pos.y, 3, 3, 0, 0, function(x, y)
+                    {return Bodies.circle(x,y, 7, particleOptions)}));
                 }
             }
         }
@@ -93,9 +100,14 @@ Example.candyland = function() {
             let dX = rock.position.x - rockX,
                 dY = rock.position.y - rockY;
             if (Math.sqrt(dX*dX + dY*dY) > displacement) {
+                oldRock = rock;
                 rock = Bodies.polygon(rockX, rockY, 7, 20, rockOptions);
                 World.add(engine.world, rock);
                 elastic.bodyB = rock;
+
+                setTimeout(() => {
+                    oldRock.collisionFilter.category = defaultCategory;
+                }, 2000)
 
             }
         }
