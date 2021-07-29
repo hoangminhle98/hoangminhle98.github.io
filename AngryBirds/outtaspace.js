@@ -51,7 +51,7 @@ Example.outtaspace = function() {
         return Math.floor(Math.random() * max);
     }
     for (i = 0; i < 2*max; i += 1)
-        for (j = 0; j < (Math.pow(Math.abs(1 - i/max), 4) + 0.1)*16; j += 1) {
+        for (j = 0; j < getRandomInt(max); j += 1) {
             square = Bodies.rectangle((size + 2) * i + 50, (size + 2)* j + 70, size, size, diamondOptions);
             World.add(engine.world, square);
             square.isStatic = true;
