@@ -1,5 +1,9 @@
 var Example = Example || {};
-
+var defaultCategory = 0x0001,
+    rockCategory = 0x0002;
+var rockOptions = { density: 1, restitution: 0.99, friction: 0.001, collisionFilter: { category: rockCategory}, label: 'rock' },
+    diamondOptions = { density: 0.004, label: 'diamond'},
+    particleOptions = {density: 0.00001, friction: 0.00001, restitution : 0.9};
 Example.candyland = function() {
     var Engine = Matter.Engine,
         Render = Matter.Render,
@@ -19,7 +23,7 @@ Example.candyland = function() {
         element: document.body,
         engine: engine,
         options: {
-            width: 1000,
+            width: 1400,
             height: 600,
             wireframes: false
         }
@@ -32,8 +36,6 @@ Example.candyland = function() {
 
     const rockX = 240,
         rockY = 370,
-        defaultCategory = 0x0001,
-        rockCategory = 0x0002,
         displacement = 30;
     var rockOptions = { density: 1, restitution: 0.99, friction: 0.001, collisionFilter: { category: rockCategory} },
         rock = Bodies.polygon(rockX, rockY, 8, 20, rockOptions),
@@ -60,9 +62,9 @@ Example.candyland = function() {
         };
 
     max = 7;
-    for (i = 0; i < 30; i += 1)
+    for (i = 0; i < 18; i += 1)
         for (j = 0; j < getRandomInt(max); j += 1) {
-            square = Bodies.rectangle( 100 + (size + 2) * i, 580 - (size + 2)* j, size, size, diamondOptions);
+            square = Bodies.rectangle( 250 + (size + 2) * i, 580 - (size + 2)* j, size, size, diamondOptions);
             World.add(engine.world, square);
             square.isStatic = true;
         };
@@ -130,7 +132,7 @@ Example.candyland = function() {
 
     Render.lookAt(render, {
         min: { x: 0, y: 0 },
-        max: { x: 800, y: 600 }
+        max: { x: 1400, y: 600 }
     });
     return {
         engine: engine,
