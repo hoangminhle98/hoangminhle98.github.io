@@ -1,10 +1,5 @@
 var Example = Example || {};
-var defaultCategory = 0x0001,
-    rockCategory = 0x0002;
-var rockOptions = { density: 1, restitution: 0.99, friction: 0.001, collisionFilter: { category: rockCategory}, label: 'rock' },
-    diamondOptions = { density: 0.004, label: 'diamond'},
-    particleOptions = {density: 0.00001, friction: 0.00001, restitution : 0.9};
-Example.candyland = function() {
+Example.outtaspace = function() {
     var Engine = Matter.Engine,
         Render = Matter.Render,
         Runner = Matter.Runner,
@@ -19,6 +14,7 @@ Example.candyland = function() {
     Composite = Matter.Composite;
     var engine = Engine.create(),
         world = engine.world;
+    world.gravity.scale = 0;
     var render = Render.create({
         element: document.body,
         engine: engine,
@@ -34,8 +30,8 @@ Example.candyland = function() {
     var runner = Runner.create();
     Runner.run(runner, engine);
 
-    const rockX = 260,
-        rockY = 370,
+    const rockX = 720,
+        rockY = 330,
         displacement = 30;
     var rockOptions = { density: 1, restitution: 0.99, friction: 0.001, collisionFilter: { category: rockCategory} },
         rock = Bodies.polygon(rockX, rockY, 8, 20, rockOptions),
@@ -45,33 +41,26 @@ Example.candyland = function() {
             bodyB: rock,
             stiffness: 0.05
         })
-        diamondOptions = { density: 0.004, label: 'diamond'},
-        particleOptions = {density: 0.00001, friction: 0.00001, restitution : 0.9};
+    diamondOptions = { density: 0.004, label: 'diamond'},
+        particleOptions = {density: 0.0001, friction: 0.00001, restitution : 0.9};
 
     rock.label = 'rock';
 
-    var size = 30, max = 17;
+    var size = 30, max = 21;
     function getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
-    for (i = 0; i < 30; i += 1)
-        for (j = 0; j < getRandomInt(max); j += 1) {
-            square = Bodies.rectangle((size + 2) * i + 250, (size + 2)* j + 70, size, size, diamondOptions);
+    for (i = 0; i < 2*max; i += 1)
+        for (j = 0; j < (Math.pow(Math.abs(1 - i/max), 4) + 0.1)*16; j += 1) {
+            square = Bodies.rectangle((size + 2) * i + 50, (size + 2)* j + 70, size, size, diamondOptions);
             World.add(engine.world, square);
             square.isStatic = true;
         };
 
-    max = 6;
-    for (i = 0; i < 25; i += 1)
-        for (j = 0; j < getRandomInt(max); j += 1) {
-            square = Bodies.rectangle( 300 + (size + 2) * i, 580 - (size + 2)* j, size, size, diamondOptions);
-            World.add(engine.world, square);
-            square.isStatic = true;
-        };
 
     World.add(engine.world, [rock, elastic]);
 
-    var threshold = 900;
+    var threshold = 9;
     Events.on(engine, 'collisionEnd', function(event) {
         var pairs = event.pairs;
         for (var i = 0, j = pairs.length; i != j; ++i) {

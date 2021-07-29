@@ -20,7 +20,7 @@ Example.newtonsCradle = function() {
         element: document.body,
         engine: engine,
         options: {
-            width: 1000,
+            width: 1400,
             height: 600,
             wireframes: false,
             showSleeping: false
@@ -40,7 +40,7 @@ Example.newtonsCradle = function() {
     var cradleB = Composites.newtonsCradle(600, 270, 5, 20, 130);
     Body.translate(cradleB.bodies[0], { x: -80, y: -40 });
 
-    var cradleC = Composites.newtonsCradle(600, 440, 5, 20, 135);
+    var cradleC = Composites.newtonsCradle(600, 440, 5, 20, 140);
     Body.translate(cradleC.bodies[0], { x: -50, y: -40 });
 
     var rock = Bodies.polygon(rockX, rockY, 8, 20, rockOptions),

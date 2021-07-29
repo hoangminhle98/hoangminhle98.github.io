@@ -112,8 +112,8 @@ Example.winterday = function() {
                     pos = bodyA.position;
                     Composite.remove(world, bodyA);
 
-                    World.add(engine.world, Composites.stack(pos.x, pos.y, 6, 6, 0, 0, function(x, y)
-                    {return Bodies.circle(x,y, 3, particleOptions)}));
+                    World.add(engine.world, Composites.stack(pos.x, pos.y, 5, 5, 0, 0, function(x, y)
+                    {return Bodies.circle(x,y, 4, particleOptions)}));
                 }
             }
         }
