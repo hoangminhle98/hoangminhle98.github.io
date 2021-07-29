@@ -12,11 +12,6 @@ MatterTools.Demo.create({
     resetOnOrientation: true,
     examples: [
         {
-            name: 'Outta space',
-            id : 'outtaspace',
-            init: Example.outtaspace
-        },
-        {
             name: 'Newton\'s Cradle',
             id : 'newtoncradle',
             init: Example.newtonsCradle
@@ -25,6 +20,11 @@ MatterTools.Demo.create({
             name: 'Candy Land',
             id: 'candyland',
             init: Example.candyland
+        },
+        {
+            name: 'Outta space',
+            id : 'outtaspace',
+            init: Example.outtaspace
         },
         {
             name: 'Winter Day',
