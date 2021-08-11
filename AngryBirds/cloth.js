@@ -60,7 +60,7 @@ Example.cloth = function() {
 
     Composite.add(world, [
         cloth,
-        Bodies.rectangle(400, 609, 800, 50, { isStatic: true })
+        Bodies.rectangle(450, 609, 500, 50, { isStatic: true })
     ]);
 
     World.add(engine.world, [rock, elastic]);
