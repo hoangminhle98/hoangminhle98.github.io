@@ -5,6 +5,10 @@ var rockOptions = { density: 1, restitution: 0.99, friction: 0.001, collisionFil
     diamondOptions = { density: 0.004, label: 'diamond'},
     particleOptions = {density: 0.00001, friction: 0.00001, restitution : 0.9};
 Example.candyland = function() {
+    currentScore = 0;
+    try{
+        document.getElementById("score").innerHTML = currentScore;
+    } catch (error){};
     var Engine = Matter.Engine,
         Render = Matter.Render,
         Runner = Matter.Runner,
@@ -92,7 +96,10 @@ Example.candyland = function() {
                     Composite.remove(world, bodyA);
                     World.add(engine.world, Composites.stack(pos.x, pos.y, 3, 3, 0, 0, function(x, y)
                     {return Bodies.circle(x,y, 7, particleOptions)}));
+                    currentScore += world.bodies.length * 10
+                    document.getElementById("score").innerHTML = currentScore;
                 }
+
             }
         }
     });

@@ -1,5 +1,10 @@
 var Example = Example || {};
-Example.outtaspace = function() {
+var defaultCategory = 0x0001,
+    rockCategory = 0x0002;
+var rockOptions = { density: 1, restitution: 0.99, friction: 0.001, collisionFilter: { category: rockCategory}, label: 'rock' },
+    diamondOptions = { density: 0.004, label: 'diamond'},
+    particleOptions = {density: 0.00001, friction: 0.00001, restitution : 0.9};
+Example.cloth = function() {
     currentScore = 0;
     document.getElementById("score").innerHTML = 0;
     var Engine = Matter.Engine,
@@ -16,7 +21,6 @@ Example.outtaspace = function() {
     Composite = Matter.Composite;
     var engine = Engine.create(),
         world = engine.world;
-    world.gravity.scale = 0;
     var render = Render.create({
         element: document.body,
         engine: engine,
@@ -32,8 +36,8 @@ Example.outtaspace = function() {
     var runner = Runner.create();
     Runner.run(runner, engine);
 
-    const rockX = 720,
-        rockY = 330,
+    const rockX = 1000,
+        rockY = 370,
         displacement = 30;
     var rockOptions = { density: 1, restitution: 0.99, friction: 0.001, collisionFilter: { category: rockCategory} },
         rock = Bodies.polygon(rockX, rockY, 8, 20, rockOptions),
@@ -44,25 +48,24 @@ Example.outtaspace = function() {
             stiffness: 0.05
         })
     diamondOptions = { density: 0.004, label: 'diamond'},
-        particleOptions = {density: 0.0001, friction: 0.00001, restitution : 0.9};
+        particleOptions = {density: 0.00001, friction: 0.00001, restitution : 0.9};
 
     rock.label = 'rock';
 
-    var size = 30, max = 21;
-    function getRandomInt(max) {
-        return Math.floor(Math.random() * max);
-    }
-    for (i = 0; i < 2*max; i += 1)
-        for (j = 0; j < getRandomInt(max); j += 1) {
-            square = Bodies.rectangle((size + 2) * i + 50, (size + 2)* j + 70, size, size, diamondOptions);
-            World.add(engine.world, square);
-            square.isStatic = true;
-        };
+    var cloth = Example.cloth.cloth(200, 200, 20, 12, 5, 5, false, 8, diamondOptions);
 
+    for (var i = 0; i < 20; i++) {
+        cloth.bodies[i].isStatic = true;
+    }
+
+    Composite.add(world, [
+        cloth,
+        Bodies.rectangle(400, 609, 800, 50, { isStatic: true })
+    ]);
 
     World.add(engine.world, [rock, elastic]);
 
-    var threshold = 9;
+    var threshold = 900;
     Events.on(engine, 'collisionEnd', function(event) {
         var pairs = event.pairs;
         for (var i = 0, j = pairs.length; i != j; ++i) {
@@ -81,7 +84,11 @@ Example.outtaspace = function() {
                 if (Math.sqrt(velocity.x*velocity.x + velocity.y*velocity.y) * bodyB.mass > threshold) {
                     pos = bodyA.position;
                     Composite.remove(world, bodyA);
-                    World.add(engine.world, Composites.stack(pos.x, pos.y, 3, 3, 0, 0, function(x, y)
+                    setTimeout(() => {
+                        World.remove(rock);
+                    }, 2000);
+
+                    World.add(engine.world, Composites.stack(pos.x, pos.y, 1, 2, 0, 0, function(x, y)
                     {return Bodies.circle(x,y, 7, particleOptions)}));
                     currentScore += world.bodies.length * 10
                     document.getElementById("score").innerHTML = currentScore;
@@ -137,5 +144,25 @@ Example.outtaspace = function() {
             Matter.Runner.stop(runner);
         }
     };
+};
+Example.cloth.cloth = function(xx, yy, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions) {
+    var Body = Matter.Body,
+        Bodies = Matter.Bodies,
+        Common = Matter.Common,
+        Composites = Matter.Composites;
+
+    var group = Body.nextGroup(true);
+    particleOptions = Common.extend({ inertia: Infinity, friction: 0.00001, collisionFilter: { group: group }, render: { visible: false }}, particleOptions);
+    constraintOptions = Common.extend({ stiffness: 0.06, render: { type: 'line', anchors: false } }, constraintOptions);
+
+    var cloth = Composites.stack(xx, yy, columns, rows, columnGap, rowGap, function(x, y) {
+        return Bodies.circle(x, y, particleRadius, particleOptions);
+    });
+
+    Composites.mesh(cloth, columns, rows, crossBrace, constraintOptions);
+
+    cloth.label = 'Cloth Body';
+
+    return cloth;
 };
 

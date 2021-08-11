@@ -1,4 +1,6 @@
 Example.newtonsCradle = function() {
+    currentScore = 0;
+    document.getElementById("score").innerHTML = 0;
     var Engine = Matter.Engine,
         Render = Matter.Render,
         Runner = Matter.Runner,
@@ -123,6 +125,8 @@ Example.newtonsCradle = function() {
                     Composite.remove(world, bodyA);
                     World.add(engine.world, Composites.stack(pos.x, pos.y, 2, 2, 0, 0, function(x, y)
                     {return Bodies.circle(x,y, 8, particleOptions)}));
+                    currentScore += world.bodies.length * 100
+                    document.getElementById("score").innerHTML = currentScore;
                 }
             }
         }

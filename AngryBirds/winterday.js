@@ -1,6 +1,9 @@
 var Example = Example || {};
 
 Example.winterday = function() {
+    currentScore = 0;
+    document.getElementById("score").innerHTML = currentScore;
+
     var Engine = Matter.Engine,
         Render = Matter.Render,
         Runner = Matter.Runner,
@@ -114,6 +117,8 @@ Example.winterday = function() {
 
                     World.add(engine.world, Composites.stack(pos.x, pos.y, 5, 5, 0, 0, function(x, y)
                     {return Bodies.circle(x,y, 4, particleOptions)}));
+                    currentScore += world.bodies.length * 10
+                    document.getElementById("score").innerHTML = currentScore;
                 }
             }
         }

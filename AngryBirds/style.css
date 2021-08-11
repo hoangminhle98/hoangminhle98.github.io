@@ -23,6 +23,13 @@ select.matter-example-select.matter-select {
 
 }
 
+.matter-link {
+    pointer-events: none;
+    font-size: 10px;
+    font-family:silkscreen;
+    color: white;
+}
+
 .matter-logo {
     visibility: hidden;
 }
