@@ -73,7 +73,7 @@ Example.chains = function() {
     }));
     // var star = Vertices.fromPath('50 0 63 38 100 38 69 59 82 100 50 75 18 100 31 59 0 38 37 38');
 
-    var ropeD = Composites.stack(500, 50, 5, 2, 10, 10, function(x, y) {
+    var ropeD = Composites.stack(500, 50, 10, 1, 10, 10, function(x, y) {
         return Bodies.rectangle(x, y, 40, 20, diamondOptions);
     });
 
