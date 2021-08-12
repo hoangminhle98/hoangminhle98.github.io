@@ -37,6 +37,11 @@ MatterTools.Demo.create({
             id: 'winterday',
             init: Example.winterday
         },
+        {
+            name: 'Chains',
+            id: 'chains',
+            init: Example.chains
+        },
 
     ]
 });

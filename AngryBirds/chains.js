@@ -1,10 +1,5 @@
 var Example = Example || {};
-var defaultCategory = 0x0001,
-    rockCategory = 0x0002;
-var rockOptions = { density: 1, restitution: 0.99, friction: 0.001, collisionFilter: { category: rockCategory}, label: 'rock' },
-    diamondOptions = { density: 0.004, label: 'diamond'},
-    particleOptions = {density: 0.00001, friction: 0.00001, restitution : 0.9};
-Example.cloth = function() {
+Example.chains = function() {
     currentScore = 0;
     document.getElementById("score").innerHTML = 0;
     var Engine = Matter.Engine,
@@ -14,6 +9,7 @@ Example.cloth = function() {
         Events = Matter.Events,
         Constraint = Matter.Constraint,
         MouseConstraint = Matter.MouseConstraint,
+        Common = Matter.Common,
         Mouse = Matter.Mouse,
         World = Matter.World,
         Bodies = Matter.Bodies;
@@ -30,6 +26,72 @@ Example.cloth = function() {
             wireframes: false
         }
     });
+    var group = Body.nextGroup(true);
+    diamondOptions = { density: 0.004, label: 'diamond', collisionFilter: { group: group }},
+        particleOptions = {density: 0.00001, friction: 0.00001, restitution : 0.9};
+
+
+
+    var ropeA = Composites.pyramid(100, 50, 7, 3, 10, 10, function(x, y) {
+        return Bodies.circle(x, y, 20, diamondOptions);
+    });
+
+    Composites.chain(ropeA, 0.5, 0, -0.5, 0, { stiffness: 0.8, length: 2, render: { type: 'line' } });
+    Composite.add(ropeA, Constraint.create({
+        bodyB: ropeA.bodies[0],
+        pointB: { x: -25, y: 0 },
+        pointA: { x: ropeA.bodies[0].position.x, y: ropeA.bodies[0].position.y },
+        stiffness: 0.5
+    }));
+
+    group = Body.nextGroup(true);
+
+    var ropeB = Composites.stack(350, 50, 5, 2, 10, 10, function(x, y) {
+        return Bodies.rectangle(x, y, 40, 20, diamondOptions);
+    });
+
+    Composites.chain(ropeB, 0.5, 0, -0.5, 0, { stiffness: 0.8, length: 2, render: { type: 'line' } });
+    Composite.add(ropeB, Constraint.create({
+        bodyB: ropeB.bodies[0],
+        pointB: { x: -20, y: 0 },
+        pointA: { x: ropeB.bodies[0].position.x, y: ropeB.bodies[0].position.y },
+        stiffness: 0.5
+    }));
+
+    group = Body.nextGroup(true);
+    // diamondOptions.chamfer = 10;
+    var ropeC = Composites.stack(630, 50, 10, 1, 10, 10, function(x, y) {
+        return Bodies.rectangle(x - 20, y, 50, 20, Common.extend(diamondOptions, {chamfer:10}));
+    });
+
+    Composites.chain(ropeC, 0.3, 0, -0.3, 0, { stiffness: 1, length: 0 });
+    Composite.add(ropeC, Constraint.create({
+        bodyB: ropeC.bodies[0],
+        pointB: { x: -20, y: 0 },
+        pointA: { x: ropeC.bodies[0].position.x, y: ropeC.bodies[0].position.y },
+        stiffness: 0.5
+    }));
+    // var star = Vertices.fromPath('50 0 63 38 100 38 69 59 82 100 50 75 18 100 31 59 0 38 37 38');
+
+    var ropeD = Composites.stack(500, 50, 5, 2, 10, 10, function(x, y) {
+        return Bodies.rectangle(x, y, 40, 20, diamondOptions);
+    });
+
+    Composites.chain(ropeD, 0.5, 0, -0.5, 0, { stiffness: 0.8, length: 2, render: { type: 'line' } });
+    Composite.add(ropeD, Constraint.create({
+        bodyB: ropeD.bodies[0],
+        pointB: { x: -20, y: 0 },
+        pointA: { x: ropeD.bodies[0].position.x, y: ropeD.bodies[0].position.y },
+        stiffness: 0.1
+    }));
+
+    Composite.add(world, [
+        ropeA,
+        ropeB,
+        ropeC,
+        ropeD,
+        Bodies.rectangle(400, 600, 500, 20, { isStatic: true })
+    ]);
 
     Render.run(render);
 
@@ -47,21 +109,10 @@ Example.cloth = function() {
             bodyB: rock,
             stiffness: 0.05
         })
-    diamondOptions = { density: 0.004, label: 'diamond'},
-        particleOptions = {density: 0.00001, friction: 0.00001, restitution : 0.9};
+
 
     rock.label = 'rock';
 
-    var cloth = Example.cloth.cloth(200, 200, 20, 12, 5, 5, false, 8, diamondOptions);
-
-    for (var i = 0; i < 20; i++) {
-        cloth.bodies[i].isStatic = true;
-    }
-
-    Composite.add(world, [
-        cloth,
-        Bodies.rectangle(450, 609, 500, 50, { isStatic: true })
-    ]);
 
     World.add(engine.world, [rock, elastic]);
 
@@ -83,9 +134,11 @@ Example.cloth = function() {
                 let velocity = bodyB.velocity;
                 if (Math.sqrt(velocity.x*velocity.x + velocity.y*velocity.y) * bodyB.mass > threshold) {
                     pos = bodyA.position;
-                    World.add(engine.world, Composites.stack(pos.x, pos.y, 1, 2, 0, 0, function(x, y)
+                    bodyA.render.visible = false;
+                    bodyA.label = "none";
+                    World.add(engine.world, Composites.stack(pos.x, pos.y, 1, 4, 0, 0, function(x, y)
                     {return Bodies.circle(x,y, 7, particleOptions)}));
-                    currentScore += world.bodies.length * 10
+                    currentScore += world.bodies.length * 100
                     document.getElementById("score").innerHTML = currentScore;
                 }
             }
@@ -140,24 +193,3 @@ Example.cloth = function() {
         }
     };
 };
-Example.cloth.cloth = function(xx, yy, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions) {
-    var Body = Matter.Body,
-        Bodies = Matter.Bodies,
-        Common = Matter.Common,
-        Composites = Matter.Composites;
-
-    var group = Body.nextGroup(true);
-    particleOptions = Common.extend({ inertia: Infinity, friction: 0.00001, collisionFilter: { group: group }, render: { visible: false }}, particleOptions);
-    constraintOptions = Common.extend({ stiffness: 0.06, render: { type: 'line', anchors: false } }, constraintOptions);
-
-    var cloth = Composites.stack(xx, yy, columns, rows, columnGap, rowGap, function(x, y) {
-        return Bodies.circle(x, y, particleRadius, particleOptions);
-    });
-
-    Composites.mesh(cloth, columns, rows, crossBrace, constraintOptions);
-
-    cloth.label = 'Cloth Body';
-
-    return cloth;
-};
-
