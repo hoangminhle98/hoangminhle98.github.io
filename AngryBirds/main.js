@@ -42,6 +42,11 @@ MatterTools.Demo.create({
             id: 'chains',
             init: Example.chains
         },
+        {
+            name: 'Run devil run',
+            id: 'run',
+            init: Example.manipulation
+        },
 
     ]
 });
